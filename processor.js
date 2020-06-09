@@ -13,23 +13,23 @@ const path = require("path")
 const yaml = require("yaml")
 const rehypeFormat = require("rehype-format")
 
-const PageId = require("./page-id")
-const pageId = new PageId()
-
-function transform(node) {
-    pageId.increment()
-    node.data.hProperties = {
-        id: pageId.current
+function createTransform() {
+    let page = 1;
+    return (node) => {
+        node.data.hProperties = {
+            id: `p${page}`
+        }
+        node.children.push({
+            type: 'link',
+            url: `#p${page-1}`,
+            title: 'previous-page'
+        }, {
+            type: 'link',
+            url: `#p${page+1}`,
+            title: 'next-page'
+        })
+        page++
     }
-    node.children.push({
-        type: 'link',
-        url: `#${pageId.previous}`,
-        title: 'previous-page'
-    }, {
-        type: 'link',
-        url: `#${pageId.next}`,
-        title: 'next-page'
-    })
 }
 
 function template (content, frontmatter) {
@@ -58,7 +58,7 @@ const processor = unified()
         custom: [{
             type: 'frame',
             element: 'section',
-            transform
+            transform: createTransform()
         }]
     })
     .use(remarkRehype)
