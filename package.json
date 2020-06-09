@@ -2,15 +2,17 @@
   "name": "deckduck",
   "version": "0.1.0",
   "description": "Markdown to the slide deck compiler",
-  "main": "index.js",
+  "main": "processor.js",
   "scripts": {
     "test": "jest --coverage"
   },
+  "bin": "deckduck.js",
   "keywords": [
     "unified",
     "deck",
     "mathjax",
-    "markdown"
+    "markdown",
+    "remark"
   ],
   "author": "TANGIUCHI Masaya",
   "license": "MIT",
@@ -26,6 +28,8 @@
     "remark-math": "^2.0.1",
     "remark-parse": "^8.0.2",
     "remark-rehype": "^7.0.0",
+    "tmp": "^0.2.1",
+    "to-vfile": "^6.1.0",
     "unified": "^9.0.0",
     "yaml": "^1.10.0",
     "yargs": "^15.3.1"

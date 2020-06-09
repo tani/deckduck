@@ -32,39 +32,43 @@ function createTransform() {
     }
 }
 
-function template (content, frontmatter) {
-    const cssFile = path.join(__dirname, `${frontmatter.theme || 'default'}.css`)
-    const stylesheet = fs.readFileSync(cssFile, 'utf-8');
-    return html`
-        ${doctype}
-        <html>
-            <head>
-                <title>${frontmatter.title}</title>
-                <style>${stylesheet}</style>
-            </head>
-            <body>
-                ${content}
-            </body>
-        </html>
-    `
+function createTemplate(argv) {
+    return (content, frontmatter) => {
+        const cssFile = path.join(__dirname, `${argv.theme || frontmatter.theme || 'default'}.css`)
+        const stylesheet = fs.readFileSync(cssFile, 'utf-8');
+        return html`
+            ${doctype}
+            <html>
+                <head>
+                    <title>${frontmatter.title}</title>
+                    <style>${stylesheet}</style>
+                </head>
+                <body>
+                    ${content}
+                </body>
+            </html>
+        `
+    }
 }
 
-const processor = unified()
-    .use(remarkParse)
-    .use(remarkFrontmatter)
-    .use(remarkExtractFrontmatter, { yaml: yaml.parse })
-    .use(remarkMath)
-    .use(remarkContainers, { 
-        custom: [{
-            type: 'frame',
-            element: 'section',
-            transform: createTransform()
-        }]
-    })
-    .use(remarkRehype)
-    .use(rehypeTemplate, { template })
-    .use(rehypeMathJax)
-    .use(rehypeFormat)
-    .use(rehypeStringify)
+function createProcessor(argv) {
+    return unified()
+        .use(remarkParse)
+        .use(remarkFrontmatter)
+        .use(remarkExtractFrontmatter, { yaml: yaml.parse })
+        .use(remarkMath)
+        .use(remarkContainers, { 
+            custom: [{
+                type: 'frame',
+                element: 'section',
+                transform: createTransform()
+            }]
+        })
+        .use(remarkRehype)
+        .use(rehypeTemplate, { template: createTemplate(argv) })
+        .use(rehypeMathJax)
+        .use(rehypeFormat)
+        .use(rehypeStringify)
+}
 
-module.exports = processor
+module.exports = createProcessor 
