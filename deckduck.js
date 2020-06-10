@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const createProcessor = require("./processor")
 const yargs = require("yargs")
 const vfile = require("to-vfile")
@@ -8,7 +9,9 @@ if (yargs.argv._.length === 2) {
     createProcessor(yargs.argv).process(vfile.readSync(yargs.argv._[0]), (error, file)=>{
         if(error) throw error
         if(path.extname(yargs.argv._[1]) === ".html") {
-            fs.writeFile(yargs.argv._[1], file.toString())
+            fs.writeFile(yargs.argv._[1], file.toString(), (error) => {
+                if (error) throw error
+            })
         } else if (path.extname(yargs.argv._[1]) === ".pdf") {
             tmp.file({ extname: ".html" }, (error, tmpfile) => {
                 if (error) throw error

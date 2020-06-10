@@ -12,6 +12,7 @@ const fs = require("fs")
 const path = require("path")
 const yaml = require("yaml")
 const rehypeFormat = require("rehype-format")
+const sass = require("sass")
 
 function createTransform() {
     let page = 1;
@@ -34,14 +35,14 @@ function createTransform() {
 
 function createTemplate(argv) {
     return (content, frontmatter) => {
-        const cssFile = path.join(__dirname, `${argv.theme || frontmatter.theme || 'default'}.css`)
-        const stylesheet = fs.readFileSync(cssFile, 'utf-8');
+        const scssFile = path.join(__dirname, `${argv.theme || frontmatter.theme || 'default'}.scss`)
+        const stylesheet = sass.renderSync({file: scssFile})
         return html`
             ${doctype}
             <html>
                 <head>
                     <title>${frontmatter.title}</title>
-                    <style>${stylesheet}</style>
+                    <style>${stylesheet.css.toString("utf-8")}</style>
                 </head>
                 <body>
                     ${content}

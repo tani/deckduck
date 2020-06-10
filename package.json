@@ -17,7 +17,6 @@
   "author": "TANGIUCHI Masaya",
   "license": "MIT",
   "dependencies": {
-    "puppeteer": "^3.3.0",
     "rehype-format": "^3.0.1",
     "rehype-mathjax": "^2.0.0",
     "rehype-stringify": "^8.0.0",
@@ -28,6 +27,7 @@
     "remark-math": "^2.0.1",
     "remark-parse": "^8.0.2",
     "remark-rehype": "^7.0.0",
+    "sass": "^1.26.8",
     "tmp": "^0.2.1",
     "to-vfile": "^6.1.0",
     "unified": "^9.0.0",
